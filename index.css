@@ -6,6 +6,14 @@
 #41B3A3
 */
 
+.color-show {
+    color: #E27D60;
+    color: #85DCBB;
+    color: #E8A87C;
+    color: #C38D9E;
+    color: #41B3A3;
+}
+
 * {
     margin: 0%;
     box-sizing: border-box;
@@ -14,6 +22,7 @@
 
 body {
     background-color: #85dcbf;
+    height: 150vh;
 }
 
 .header {
