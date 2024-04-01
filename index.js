@@ -11,11 +11,16 @@
 
  const buttons = [rock, paper, scissors];
  let record = []
- let gameCount = [];
+ let gameCount = JSON.parse(localStorage.getItem('gameCount')) || [];
  let playerScore = 0;
  let comperScore = 0;
- let gameTracker = [];
+ let gameTracker = JSON.parse(localStorage.getItem('gameTracker')) || [];
 
+ if (gameTracker == []) {
+    histBtn.style.visibility = 'hidden';
+} else {
+    histBtn.style.visibility = 'visible';
+}
 
  buttons.forEach(button => {
     button.addEventListener('click', () => {
@@ -58,13 +63,15 @@ function endCurrentGame() {
     }
     turnDiv.textContent = 'Choose to play again!';
     score.textContent = '';
-    gameCount++
+    gameCount++;
+    localStorage.setItem('gameCount', JSON.stringify(gameCount));
     gameTracker.push({
         game: gameCount,
         pscore: playerScore,
         cscore: comperScore
     })
     console.log(gameTracker);
+    localStorage.setItem('gameTracker', JSON.stringify(gameTracker));
     playerScore = 0;
     comperScore = 0;
 }
@@ -106,4 +113,15 @@ histBtn.addEventListener('click', () => {
 
         history.appendChild(gameTrackerDiv);
     });
+    const clearHistory = document.createElement('button');
+    clearHistory.textContent = 'Clear data?';
+    history.appendChild(clearHistory);
+
+    clearHistory.addEventListener('click', () => {
+        gameCount = [];
+        gameTracker = [];
+        localStorage.setItem('gameCount', JSON.stringify(gameCount));
+        localStorage.setItem('gameTracker', JSON.stringify(gameTracker));
+        history.style.visibility = 'hidden';
+    })
 })
