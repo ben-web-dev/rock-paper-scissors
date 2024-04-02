@@ -8,8 +8,12 @@
  const gameDiv = document.querySelector('.game-announcement');
  const histBtn = document.querySelector('.history-button');
  const history = document.querySelector('.history');
+ const rulesBtn = document.querySelector('.rules');
+ const rulesDiv = document.createElement('div');
 
  const buttons = [rock, paper, scissors];
+ let playerName = '';
+ playerName = prompt('Enter your name: ');
  let record = []
  let gameCount = JSON.parse(localStorage.getItem('gameCount')) || [];
  let playerScore = 0;
@@ -36,14 +40,14 @@ function playTurn(choice) {
         choice === 'paper' && aiTurn === 'rock'    ||
         choice === 'scissors' && aiTurn === 'paper'  ) {
             console.log('you win!');
-            turnDiv.textContent = 'You win!';
+            turnDiv.textContent = `${playerName} beats Computer!`;
             ++playerScore;
     } else if
        (choice === 'rock' && aiTurn === 'paper'    ||
         choice === 'paper' && aiTurn === 'scissors'||
         choice === 'scissors' && aiTurn === 'rock'   ) {
             console.log('you lose!');
-            turnDiv.textContent = 'You lose!';
+            turnDiv.textContent = `Computer beats ${playerName}!`;
             ++comperScore;
     } else {
             console.log('draw!');
@@ -57,7 +61,7 @@ function playTurn(choice) {
 
 function endCurrentGame() {
     if (playerScore === 5) {
-        gameDiv.textContent = `You win this game ${playerScore}:${comperScore}`;
+        gameDiv.textContent = `${playerName} wins this game ${playerScore}:${comperScore}`;
     } else if (comperScore === 5) {
         gameDiv.textContent = `Computer wins this game ${comperScore}:${playerScore}`;
     }
@@ -67,6 +71,7 @@ function endCurrentGame() {
     localStorage.setItem('gameCount', JSON.stringify(gameCount));
     gameTracker.push({
         game: gameCount,
+        pname: playerName,
         pscore: playerScore,
         cscore: comperScore
     })
@@ -94,6 +99,7 @@ histBtn.addEventListener('click', () => {
     const historyExit = document.createElement('button');
     historyExit.innerHTML = 'X';
     historyExit.style.right = '0';
+    historyExit.style.margin = '1vh';
     historyExit.addEventListener('click', () => {
         history.style.visibility = 'hidden';
     })
@@ -105,8 +111,15 @@ histBtn.addEventListener('click', () => {
         const gameTrackerDivPlayer = document.createElement('p');
         const gameTrackerDivComper = document.createElement('p');
         gameTrackerDivGame.textContent = `Game: ${game.game}`;
-        gameTrackerDivPlayer.textContent = `Player: ${game.pscore}`;
+        gameTrackerDivPlayer.textContent = `${game.pname}: ${game.pscore}`;
         gameTrackerDivComper.textContent = `Computer: ${game.cscore}`;
+        if (game.pscore > game.cscore) {
+            gameTrackerDivPlayer.style.color = 'lightgreen';
+            gameTrackerDivComper.style.color = 'red';
+        } else {
+            gameTrackerDivPlayer.style.color = 'red';
+            gameTrackerDivComper.style.color = 'lightgreen';
+        }
         gameTrackerDiv.appendChild(gameTrackerDivGame);
         gameTrackerDiv.appendChild(gameTrackerDivPlayer);
         gameTrackerDiv.appendChild(gameTrackerDivComper);
@@ -115,6 +128,7 @@ histBtn.addEventListener('click', () => {
     });
     const clearHistory = document.createElement('button');
     clearHistory.textContent = 'Clear data?';
+    clearHistory.style.margin = '1vh';
     history.appendChild(clearHistory);
 
     clearHistory.addEventListener('click', () => {
@@ -125,3 +139,8 @@ histBtn.addEventListener('click', () => {
         history.style.visibility = 'hidden';
     })
 })
+
+function inputName() {
+    const name = prompt('Enter your name: ');
+    return name;
+}
