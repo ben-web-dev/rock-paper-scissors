@@ -1,3 +1,5 @@
+ // DOM manipulation
+ 
  const container = document.querySelector('.container');
  const rock = document.getElementById("rock");
  const paper = document.getElementById("paper");
@@ -10,6 +12,8 @@
  const history = document.querySelector('.history');
  const rulesBtn = document.querySelector('.rules');
  const rulesDiv = document.createElement('div');
+
+ // Other variable declarations
 
  const buttons = [rock, paper, scissors];
  let playerName = '';
@@ -32,6 +36,9 @@
         playTurn(buttonSelected);
     })
  })
+
+ // As a player selects a choice, it automatically plays a computer turn
+ // to effectively start the round
 
 function playTurn(choice) {
     let aiTurn = computerChoice();
@@ -59,6 +66,8 @@ function playTurn(choice) {
     }
 }
 
+// Ends the game if either score reaches 5
+
 function endCurrentGame() {
     if (playerScore === 5) {
         gameDiv.textContent = `${playerName} wins this game ${playerScore}:${comperScore}`;
@@ -81,6 +90,8 @@ function endCurrentGame() {
     comperScore = 0;
 }
 
+// Produces a choice for the computer using random number generation
+
 function computerChoice() {
     let choice = Math.floor(Math.random() * 3);
     if (choice === 0) {
@@ -91,6 +102,8 @@ function computerChoice() {
         return 'scissors';
     }
 }
+
+// Round history with counters!
 
 histBtn.addEventListener('click', () => {
     history.innerHTML = '';
@@ -126,6 +139,31 @@ histBtn.addEventListener('click', () => {
 
         history.appendChild(gameTrackerDiv);
     });
+    let totalHuman = 0;
+    let totalComputer = 0;
+    let totalLegsHuman = 0;
+    let totalLegsComputer = 0;
+
+    gameTracker.forEach(game => {
+        totalLegsHuman += game.pscore
+        totalLegsComputer += game.cscore
+        if (game.pscore > game.cscore) {
+            totalHuman++
+        } else if (game.pscore < game.cscore) {
+            totalComputer++
+        }
+    });
+
+    const totalScores = document.createElement('p');
+    totalScores.textContent = `Games: Human ${totalHuman} : ${totalComputer} Computer`;
+
+    const totalLegs = document.createElement('p');
+    totalLegs.textContent = `Rounds: Human ${totalLegsHuman} : ${totalLegsComputer} Computer`;
+
+
+    history.appendChild(totalScores);
+    history.appendChild(totalLegs);
+
     const clearHistory = document.createElement('button');
     clearHistory.textContent = 'Clear data?';
     clearHistory.style.margin = '1vh';
@@ -140,7 +178,46 @@ histBtn.addEventListener('click', () => {
     })
 })
 
-function inputName() {
-    const name = prompt('Enter your name: ');
-    return name;
-}
+// Rules
+
+rulesDiv.classList.add('rules-div')
+rulesDiv.style.visibility = 'hidden';
+container.appendChild(rulesDiv)
+
+const rulesTitle = document.createElement('h2');
+rulesTitle.textContent = 'Rules of Rock, Paper, Scissors';
+rulesDiv.appendChild(rulesTitle)
+
+const rulesList = document.createElement('ul');
+rulesDiv.appendChild(rulesList);
+
+const rockRules = document.createElement('li');
+const scisRules = document.createElement('li');
+const paprRules = document.createElement('li');
+const playRules = document.createElement('li');
+const compRules = document.createElement('li');
+const drawRules = document.createElement('li');
+const clickHere = document.createElement('p');
+
+rockRules.textContent = 'Rock beats scissors';
+paprRules.textContent = 'Paper beats rock';
+scisRules.textContent = 'Scissors beats paper';
+playRules.textContent = 'If the player wins a round, they get a point.';
+compRules.textContent = 'If the computer wins a round, the computer gets a point.';
+drawRules.textContent = 'A draw produces no points for either competitor.';
+clickHere.textContent = 'Click here to continue!';
+clickHere.classList.add('rules-click-here')
+
+rulesDiv.appendChild(clickHere);
+
+const rulesArray = [rockRules, scisRules, paprRules, playRules, compRules, drawRules];
+rulesArray.forEach(rule => {
+    rulesList.appendChild(rule);
+});
+
+rulesBtn.addEventListener('click', () => {
+    rulesDiv.style.visibility = 'visible';
+})
+rulesDiv.addEventListener('click', () => {
+    rulesDiv.style.visibility = 'hidden';
+})
